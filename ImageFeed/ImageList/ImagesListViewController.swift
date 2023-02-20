@@ -8,9 +8,10 @@
 import UIKit
 
 class ImagesListViewController: UIViewController {
-    
+    //  MARK: - IB Outlets
     @IBOutlet private var tableView: UITableView!
     
+    //  MARK: - Private Properties
     private let photosName: [String] = (0..<20).map { "\($0)" }
 
     private lazy var dateFormatter: DateFormatter = {
@@ -22,12 +23,14 @@ class ImagesListViewController: UIViewController {
     
     override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent }
 
+    //  MARK: - Override Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
     }
 }
 
+//  MARK: - UITableViewDataSource
 extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         photosName.count
@@ -42,6 +45,7 @@ extension ImagesListViewController: UITableViewDataSource {
     }
 }
 
+//  MARK: - UITableViewDelegate
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {}
     
@@ -57,6 +61,7 @@ extension ImagesListViewController: UITableViewDelegate {
     }
 }
 
+//  MARK: -  Private Methods
 extension ImagesListViewController {
     private func configCell(for cell: ImageListCell, with indexPath: IndexPath) {
         guard let image = UIImage(named: photosName[indexPath.row]) else { return }
