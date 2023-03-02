@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6850143729B1025D00520517 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6850143629B1025D00520517 /* ProfileViewController.swift */; };
 		68BCEDEF29A3CB3700AB0249 /* ImageListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BCEDEE29A3CB3700AB0249 /* ImageListCell.swift */; };
 		68FBF764299FB10F0030A47C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FBF763299FB10F0030A47C /* AppDelegate.swift */; };
 		68FBF766299FB10F0030A47C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FBF765299FB10F0030A47C /* SceneDelegate.swift */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6850143629B1025D00520517 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		68BCEDEE29A3CB3700AB0249 /* ImageListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageListCell.swift; sourceTree = "<group>"; };
 		68FBF760299FB10F0030A47C /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		68FBF763299FB10F0030A47C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -43,6 +45,7 @@
 			isa = PBXGroup;
 			children = (
 				68FBF767299FB10F0030A47C /* ImagesListViewController.swift */,
+				6850143629B1025D00520517 /* ProfileViewController.swift */,
 				68BCEDEE29A3CB3700AB0249 /* ImageListCell.swift */,
 			);
 			path = ImageList;
@@ -151,6 +154,7 @@
 			files = (
 				68FBF768299FB10F0030A47C /* ImagesListViewController.swift in Sources */,
 				68BCEDEF29A3CB3700AB0249 /* ImageListCell.swift in Sources */,
+				6850143729B1025D00520517 /* ProfileViewController.swift in Sources */,
 				68FBF764299FB10F0030A47C /* AppDelegate.swift in Sources */,
 				68FBF766299FB10F0030A47C /* SceneDelegate.swift in Sources */,
 			);
