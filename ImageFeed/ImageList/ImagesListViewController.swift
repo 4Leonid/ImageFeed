@@ -28,6 +28,17 @@ class ImagesListViewController: UIViewController {
         super.viewDidLoad()
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
     }
+  
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    if segue.identifier == "ShowSingleImage" {
+      guard let viewController = segue.destination as? SingleImageViewController else { return }
+      guard let indexPath = sender as? IndexPath else { return }
+      let image = UIImage(named: photosName[indexPath.row])
+      viewController.imageView.image = image
+    } else {
+      super.prepare(for: segue, sender: sender)
+    }
+  }
 }
 
 //  MARK: - UITableViewDataSource
@@ -47,7 +58,9 @@ extension ImagesListViewController: UITableViewDataSource {
 
 //  MARK: - UITableViewDelegate
 extension ImagesListViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {}
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+      performSegue(withIdentifier: "showSingleImage", sender: indexPath)
+    }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard let image = UIImage(named: photosName[indexPath.row]) else { return 0 }
@@ -59,6 +72,8 @@ extension ImagesListViewController: UITableViewDelegate {
         let cellHeight = image.size.height * scale + imageInsets.top + imageInsets.bottom
         return cellHeight
     }
+  
+  
 }
 
 //  MARK: -  Private Methods
@@ -75,3 +90,5 @@ extension ImagesListViewController {
         
     }
 }
+
+
