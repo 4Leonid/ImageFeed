@@ -87,7 +87,6 @@ extension ImagesListViewController {
     ? UIImage(named: "like_button_on")
     : UIImage(named: "like_button_off")
     cell.likeButton.setImage(likeImage, for: .normal)
-    
   }
 }
 
