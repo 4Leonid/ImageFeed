@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="IHQ-2a-Kts">
-    <device id="retina6_0" orientation="portrait" appearance="light"/>
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
@@ -36,7 +36,7 @@
             <objects>
                 <viewController id="psi-Vl-jCy" customClass="ProfileViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="R7a-GU-k6i">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="avatar" translatesAutoresizingMaskIntoConstraints="NO" id="jNP-U7-2Y3">
@@ -47,7 +47,7 @@
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EEL-Kt-I3Q">
-                                <rect key="frame" x="344" y="99" width="20" height="22"/>
+                                <rect key="frame" x="368" y="99" width="20" height="22"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" image="ipad.and.arrow.forward"/>
                                 <connections>
@@ -56,22 +56,22 @@
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="q1B-OA-oJN">
-                                <rect key="frame" x="16" y="154" width="348" height="75"/>
+                                <rect key="frame" x="16" y="154" width="372" height="75.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Екатерина Новикова" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5gO-09-hxv">
-                                        <rect key="frame" x="0.0" y="0.0" width="348" height="27.666666666666668"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="372" height="27.5"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="23"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@ekaterina_nov" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J12-AK-pcH">
-                                        <rect key="frame" x="0.0" y="35.666666666666657" width="348" height="15.666666666666664"/>
+                                        <rect key="frame" x="0.0" y="35.5" width="372" height="16"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <color key="textColor" name="YP Gray"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hello, world!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lyn-uW-RsX">
-                                        <rect key="frame" x="0.0" y="59.333333333333336" width="348" height="15.666666666666664"/>
+                                        <rect key="frame" x="0.0" y="59.5" width="372" height="16"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -110,22 +110,22 @@
             <objects>
                 <viewController title="ImageList" id="BYZ-38-t0r" customClass="ImagesListViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="F8Y-oz-5hi">
-                                <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <color key="backgroundColor" red="0.098799999999999999" green="0.10244" blue="0.13" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ImagesListCell" rowHeight="224" id="XeA-Jt-k1v" customClass="ImageListCell" customModule="ImageFeed" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="44.666666030883789" width="390" height="224"/>
+                                        <rect key="frame" x="0.0" y="44.5" width="414" height="224"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="XeA-Jt-k1v" id="Kub-xO-NWV">
-                                            <rect key="frame" x="0.0" y="0.0" width="390" height="224"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="224"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ejj-pW-aIF">
-                                                    <rect key="frame" x="16" y="4" width="358" height="216"/>
+                                                    <rect key="frame" x="16" y="4" width="382" height="216"/>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                             <integer key="value" value="16"/>
@@ -134,13 +134,13 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JA4-OG-GYM" userLabel="Like button">
-                                                    <rect key="frame" x="324" y="4" width="42" height="42"/>
+                                                    <rect key="frame" x="348" y="4" width="42" height="42"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                     <state key="normal" image="like_button_on"/>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="27 августа 2022" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V5H-rs-dn8" userLabel="Date Label">
-                                                    <rect key="frame" x="32.000000000000007" y="196.33333333333334" width="101.66666666666669" height="15.666666666666657"/>
+                                                    <rect key="frame" x="32" y="196" width="101.5" height="16"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
@@ -190,19 +190,35 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-53.846153846153847" y="-286.49289099526067"/>
+            <point key="canvasLocation" x="-206" y="-287"/>
         </scene>
         <!--Single Image View Controller-->
         <scene sceneID="RSn-Pu-rUn">
             <objects>
                 <viewController modalPresentationStyle="fullScreen" id="ccq-kR-1aa" customClass="SingleImageViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Yai-gD-X43">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="yHP-ji-Atj">
-                                <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
-                            </imageView>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wsp-dr-CjI">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="414" placeholderIntrinsicHeight="414" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="yHP-ji-Atj">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>
+                                    </imageView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="yHP-ji-Atj" secondAttribute="trailing" id="6Go-9t-9wV"/>
+                                    <constraint firstItem="yHP-ji-Atj" firstAttribute="top" secondItem="wsp-dr-CjI" secondAttribute="top" id="D8P-hO-1Qe"/>
+                                    <constraint firstAttribute="bottom" secondItem="yHP-ji-Atj" secondAttribute="bottom" id="acA-yx-o7A"/>
+                                    <constraint firstItem="yHP-ji-Atj" firstAttribute="leading" secondItem="wsp-dr-CjI" secondAttribute="leading" id="xfz-mA-BxN"/>
+                                </constraints>
+                                <viewLayoutGuide key="contentLayoutGuide" id="ei2-gm-V3h"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="fdC-Rq-jfy"/>
+                                <connections>
+                                    <outlet property="delegate" destination="ccq-kR-1aa" id="l37-Be-y8S"/>
+                                </connections>
+                            </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XRM-za-CAc">
                                 <rect key="frame" x="8" y="52" width="48" height="48"/>
                                 <constraints>
@@ -215,26 +231,37 @@
                                     <action selector="didTapBackButton" destination="ccq-kR-1aa" eventType="touchUpInside" id="jIB-if-ty9"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y4B-Tv-kHk">
+                                <rect key="frame" x="182" y="776" width="50" height="50"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" image="Sharing"/>
+                                <connections>
+                                    <action selector="didTapShareButton" destination="ccq-kR-1aa" eventType="touchUpInside" id="Zum-vE-0NG"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="yVq-q2-Mzd"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
+                            <constraint firstItem="yVq-q2-Mzd" firstAttribute="bottom" secondItem="Y4B-Tv-kHk" secondAttribute="bottom" constant="36" id="44L-YK-iGD"/>
                             <constraint firstItem="XRM-za-CAc" firstAttribute="top" secondItem="yVq-q2-Mzd" secondAttribute="top" constant="8" id="5eU-lJ-8cv"/>
-                            <constraint firstItem="yHP-ji-Atj" firstAttribute="leading" secondItem="yVq-q2-Mzd" secondAttribute="leading" id="C56-Vv-Y3e"/>
+                            <constraint firstItem="Y4B-Tv-kHk" firstAttribute="centerX" secondItem="Yai-gD-X43" secondAttribute="centerX" id="DNv-gy-5so"/>
+                            <constraint firstItem="wsp-dr-CjI" firstAttribute="leading" secondItem="yVq-q2-Mzd" secondAttribute="leading" id="Rc2-Ge-vRG"/>
                             <constraint firstItem="XRM-za-CAc" firstAttribute="leading" secondItem="yVq-q2-Mzd" secondAttribute="leading" constant="8" id="YU6-t6-vyX"/>
-                            <constraint firstAttribute="bottom" secondItem="yHP-ji-Atj" secondAttribute="bottom" id="aIa-HU-Zf0"/>
-                            <constraint firstItem="yVq-q2-Mzd" firstAttribute="trailing" secondItem="yHP-ji-Atj" secondAttribute="trailing" id="wMV-f0-JhQ"/>
-                            <constraint firstItem="yHP-ji-Atj" firstAttribute="top" secondItem="Yai-gD-X43" secondAttribute="top" id="x21-Od-bDl"/>
+                            <constraint firstItem="wsp-dr-CjI" firstAttribute="bottom" secondItem="Yai-gD-X43" secondAttribute="bottom" id="fa8-jp-4Q3"/>
+                            <constraint firstItem="yVq-q2-Mzd" firstAttribute="trailing" secondItem="wsp-dr-CjI" secondAttribute="trailing" id="jnT-Np-1ZU"/>
+                            <constraint firstAttribute="top" secondItem="wsp-dr-CjI" secondAttribute="top" id="koE-bu-eIc"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="JiF-hw-mcB"/>
                     <connections>
                         <outlet property="imageView" destination="yHP-ji-Atj" id="Zy1-gB-oJ6"/>
+                        <outlet property="scrollView" destination="wsp-dr-CjI" id="ure-qD-Ff2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bnx-Sn-RFj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="782" y="-286"/>
+            <point key="canvasLocation" x="558" y="-287"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="B9w-TF-AiK">
@@ -243,7 +270,7 @@
                     <tabBarItem key="tabBarItem" title="" image="tab_editorial_active" id="vZ0-Pi-gpn"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Gl0-6g-L2A">
-                        <rect key="frame" x="0.0" y="44" width="390" height="44"/>
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <color key="barTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -264,6 +291,7 @@
     <resources>
         <image name="0" width="200" height="132"/>
         <image name="Backward" width="24" height="24"/>
+        <image name="Sharing" width="50" height="50"/>
         <image name="avatar" width="70" height="70"/>
         <image name="ipad.and.arrow.forward" width="20" height="22"/>
         <image name="like_button_on" width="42" height="42"/>
