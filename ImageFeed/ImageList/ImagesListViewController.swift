@@ -22,6 +22,7 @@ class ImagesListViewController: UIViewController {
     return formatter
   }()
   
+  //  MARK: - Public Properties
   override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent }
   
   //  MARK: - Override Methods
@@ -34,7 +35,9 @@ class ImagesListViewController: UIViewController {
     if segue.identifier == ShowSingleImageSegueIdentifier {
       guard let viewController = segue.destination as? SingleImageViewController else { return }
       guard let indexPath = sender as? IndexPath else { return }
-      let image = UIImage(named: photosName[indexPath.row])
+      let imageName = photosName[indexPath.row]
+      let image = UIImage(named: "\(imageName)_full_size")
+      ?? UIImage(named: imageName)
       viewController.image = image
     } else {
       super.prepare(for: segue, sender: sender)

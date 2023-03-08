@@ -17,16 +17,16 @@ final class SingleImageViewController: UIViewController {
     didSet {
       guard isViewLoaded else { return }
       imageView.image = image
+      rescaleAndCenterImageInScrollView(image: image)
     }
   }
   
   //  MARK: - Override Methods
   override func viewDidLoad() {
     super.viewDidLoad()
-    imageView.image = image
-    
     scrollView.minimumZoomScale = 0.1
     scrollView.maximumZoomScale = 1.25
+    imageView.image = image
     rescaleAndCenterImageInScrollView(image: image)
   }
   
