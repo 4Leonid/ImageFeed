@@ -23,11 +23,12 @@ class ProfileViewController: UIViewController {
     setupLabels()
   }
   
+  //  MARK: - Public Methods
   @objc func didTapLogoutButton() { }
 }
 
+//  MARK: -  Private Methods
 extension ProfileViewController {
-  //  MARK: -  Private Methods
   private func setupImage() {
     guard let profileImage = UIImage(named: "avatar") else { return }
     let imageView = UIImageView()

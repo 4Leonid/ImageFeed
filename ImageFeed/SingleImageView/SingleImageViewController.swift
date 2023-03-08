@@ -45,14 +45,15 @@ final class SingleImageViewController: UIViewController {
   }
 }
 
+//  MARK: -  Private Methods
 extension SingleImageViewController: UIScrollViewDelegate {
   func viewForZooming(in scrollView: UIScrollView) -> UIView? {
     imageView
   }
 }
 
+//  MARK: -  Private Methods
 extension SingleImageViewController {
-  //  MARK: -  Private Methods
   private func rescaleAndCenterImageInScrollView(image: UIImage) {
       let minZoomScale = scrollView.minimumZoomScale
       let maxZoomScale = scrollView.maximumZoomScale
