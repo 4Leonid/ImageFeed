@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController {
   //  MARK: - Private Properties
   private var avatarImageView: UIImageView?
 
@@ -37,8 +37,10 @@ extension ProfileViewController {
     view.addSubview(imageView)
     self.avatarImageView = imageView
     
-    imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32).isActive = true
-    imageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
+    NSLayoutConstraint.activate([
+      imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
+      imageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16)
+    ])
   }
   
   private func setupButton() {
@@ -54,8 +56,10 @@ extension ProfileViewController {
     button.translatesAutoresizingMaskIntoConstraints = false
     view.addSubview(button)
     
-    button.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
-    button.centerYAnchor.constraint(equalTo: avatarImageView.centerYAnchor).isActive = true
+    NSLayoutConstraint.activate([
+      button.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+      button.centerYAnchor.constraint(equalTo: avatarImageView.centerYAnchor)
+    ])
   }
   
   private func setupLabels() {
@@ -82,10 +86,12 @@ extension ProfileViewController {
     stackView.translatesAutoresizingMaskIntoConstraints = false
     view.addSubview(stackView)
 
-    stackView.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 10).isActive = true
-    stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
-    stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 16).isActive = true
-    
+    NSLayoutConstraint.activate([
+      stackView.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 10),
+      stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+      stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)
+    ])
+
     stackView.addArrangedSubview(nameLabel)
     stackView.addArrangedSubview(loginNameLabel)
     stackView.addArrangedSubview(descriptionLabel)
