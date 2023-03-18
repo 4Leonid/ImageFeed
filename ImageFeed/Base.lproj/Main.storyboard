@@ -24,8 +24,8 @@
                         </tabBarAppearance>
                     </tabBar>
                     <connections>
-                        <segue destination="Ik0-qd-dJx" kind="relationship" relationship="viewControllers" id="hYm-8e-w8I"/>
                         <segue destination="psi-Vl-jCy" kind="relationship" relationship="viewControllers" id="J3I-dv-se9"/>
+                        <segue destination="Ik0-qd-dJx" kind="relationship" relationship="viewControllers" id="hYm-8e-w8I"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Z4O-dB-9wD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
