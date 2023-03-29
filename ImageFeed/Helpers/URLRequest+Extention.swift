@@ -5,6 +5,8 @@
 //  Created by Леонид Турко on 29.03.2023.
 //
 
+import Foundation
+
 extension URLRequest {
   static func makeHTTPRequest(
     path: String,
