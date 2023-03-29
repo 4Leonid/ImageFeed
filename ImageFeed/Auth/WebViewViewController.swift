@@ -5,7 +5,6 @@
 //  Created by Леонид Турко on 20.03.2023.
 //
 
-import UIKit
 import WebKit
 
 fileprivate let UnsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
@@ -28,10 +27,10 @@ final class WebViewViewController: UIViewController {
     webView.navigationDelegate = self
     var urlComponents = URLComponents(string: UnsplashAuthorizeURLString)!
     urlComponents.queryItems = [
-      URLQueryItem(name: "client_id", value: AccessKey),
-      URLQueryItem(name: "redirect_uri", value: RedirectURI),
+      URLQueryItem(name: "client_id", value: Constants.AccessKey),
+      URLQueryItem(name: "redirect_uri", value: Constants.RedirectURI),
       URLQueryItem(name: "response_type", value: "code"),
-      URLQueryItem(name: "scope", value: AccessScope)
+      URLQueryItem(name: "scope", value: Constants.AccessScope)
     ]
     let url = urlComponents.url!
     
