@@ -15,7 +15,9 @@ protocol WebViewViewControllerDelegate: AnyObject {
 }
 
 final class WebViewViewController: UIViewController {
-
+  //  MARK: - Private Properties
+  private var estimatedProgressObservation: NSKeyValueObservation?
+  
   //  MARK: - IB Outlets
   @IBOutlet private var webView: WKWebView!
   @IBOutlet private var progressView: UIProgressView!
@@ -36,6 +38,15 @@ final class WebViewViewController: UIViewController {
     
     let request = URLRequest(url: url)
     webView.load(request)
+    
+    //New
+    estimatedProgressObservation = webView.observe(
+      \.estimatedProgress,
+       options: [],
+       changeHandler: { [weak self] _, _ in
+         guard let self = self else { return }
+         self.updateProgress()
+       })
     
     updateProgress()
   }

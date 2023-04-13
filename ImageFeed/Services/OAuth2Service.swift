@@ -12,6 +12,9 @@ final class OAuth2Service {
   private let urlSession = URLSession.shared
   private let tokenStorage = OAuth2TokenStorage.shared
   
+  private var currentTast: URLSessionTask?
+  private var lastCode: String?
+  
   private (set) var authToken: String? {
     get {
       return tokenStorage.token
@@ -24,6 +27,21 @@ final class OAuth2Service {
   private init() {}
   
   func fetchOAuthToken(by code: String, completion: @escaping (Result<String, Error>) -> Void ) {
+    
+    assert(Thread.isMainThread)
+    if currentTast != nil {
+      if lastCode != code {
+        currentTast?.cancel()
+      } else {
+        return
+      }
+    } else {
+      if lastCode == code {
+        return
+      }
+    }
+    lastCode = code
+    
     guard let urlRequest = authTokenRequest(code: code) else { fatalError("No token") }
     
     let task = object(for: urlRequest) { [weak self] result in

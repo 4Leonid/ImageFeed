@@ -6,9 +6,13 @@
 //
 
 import UIKit
+import ProgressHUD
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
   //  MARK: - Private Properties
+  private var profileImageServiceObserver: NSObjectProtocol?
+  
   private lazy var avatarImageView: UIImageView = {
     let imageView = UIImageView()
     imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -67,9 +71,18 @@ final class ProfileViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .ypBlack
-    addViews()
-    activateConstraints()
-
+    setViews()
+    setConstraints()
+    
+    profileImageServiceObserver = NotificationCenter.default.addObserver(
+      forName: ProfileImageService.DidChangeNotification,
+      object: nil,
+      queue: .main
+      ) { [weak self] _ in
+        guard let self = self else { return }
+        self.updateAvatar()
+      }
+    updateAvatar()
   }
   
   //  MARK: - Public Methods
@@ -78,7 +91,18 @@ final class ProfileViewController: UIViewController {
 
 //  MARK: -  Private Methods
 extension ProfileViewController {
-  private func addViews() {
+  private func updateAvatar() {
+    guard
+      let profileImageURL = ProfileImageService.shared.avatarURL,
+      let imageURL = URL(string: profileImageURL)
+    else { return }
+    
+    avatarImageView.kf.indicatorType = .activity
+    avatarImageView.kf.setImage(with: imageURL,
+      placeholder: UIImage(systemName: "person.crop.circle"))
+  }
+  
+  private func setViews() {
     view.addSubview(avatarImageView)
     view.addSubview(logoutButton)
     view.addSubview(stackView)
@@ -87,7 +111,7 @@ extension ProfileViewController {
     stackView.addArrangedSubview(descriptionLabel)
   }
   
-  private func activateConstraints() {
+  private func setConstraints() {
     NSLayoutConstraint.activate([
       avatarImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
       avatarImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),

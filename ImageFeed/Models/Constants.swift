@@ -16,3 +16,7 @@ struct Constants {
   static let bearerToken = "bearerToken"
   static let baseAuthTokenPath = "/oauth/token"
 }
+
+struct NotificationConstants {
+  static let profileImageProviderDidChange = "ProfileImageProviderDidChange"
+}
