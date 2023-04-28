@@ -11,6 +11,7 @@ final class OAuth2Service {
   static let shared = OAuth2Service()
   private let urlSession = URLSession.shared
   private let tokenStorage = OAuth2TokenStorage.shared
+  private let networkClient = NetworkClient.shared
   
   private var currentTast: URLSessionTask?
   private var lastCode: String?
@@ -28,7 +29,7 @@ final class OAuth2Service {
   
   func fetchOAuthToken(by code: String, completion: @escaping (Result<String, Error>) -> Void ) {
     
-    assert(Thread.isMainThread)
+    assert(Thread.isMainThread, "Bad thread befor fetch token!")
     if currentTast != nil {
       if lastCode != code {
         currentTast?.cancel()
@@ -42,22 +43,26 @@ final class OAuth2Service {
     }
     lastCode = code
     
-    guard let urlRequest = authTokenRequest(code: code) else { fatalError("No token") }
+    guard let urlRequest = authTokenRequest(code: code) else { fatalError("Bad request") }
     
-    let task = object(for: urlRequest) { [weak self] result in
+    let task = networkClient.getObject(dataType: OAuthTokenResponseBody.self, for: urlRequest) { [weak self] result in
       guard let self = self else { return }
       switch result {
-      case .success(let body):
-        let authToken = body.accessToken
+      case .success(let object):
+        let authToken = object.accessToken
         self.authToken = authToken
         completion(.success(authToken))
       case .failure(let error):
         completion(.failure(error))
+        self.lastCode = nil
       }
+      self.currentTast = nil
     }
+    currentTast = task
     task.resume()
   }
-  
+}
+  /*
   private func object(for request: URLRequest, completion: @escaping (Result<OAuthTokenResponseBody, Error>) -> Void) -> URLSessionTask {
     let decoder = JSONDecoder()
     
@@ -71,6 +76,7 @@ final class OAuth2Service {
     }
   }
 }
+   */
 
 extension OAuth2Service {
   private func selfProfileRequest() -> URLRequest? {
@@ -81,21 +87,21 @@ extension OAuth2Service {
       URLRequest.makeHTTPRequest(path: "/users/\(username)")
   }
   
-  func photosRequest(page: Int, perPage: Int) -> URLRequest? {
+  func photosRequest(page: Int, perPage: Int) -> URLRequest? { //1
       URLRequest.makeHTTPRequest(path: "/photos?"
         + "page=\(page)"
         + "&&per_page=\(perPage)"
       )
   }
   
-  func likeRequest(photoId: String) -> URLRequest? {
+  func likeRequest(photoId: String) -> URLRequest? { //2
       URLRequest.makeHTTPRequest(
         path: "/photos/\(photoId)/like",
         httpMethod: "POST"
       )
   }
   
-  func unlikeRequest(photoId: String) -> URLRequest? {
+  func unlikeRequest(photoId: String) -> URLRequest? { //3
       URLRequest.makeHTTPRequest(
         path: "/photos/\(photoId)/like",
         httpMethod: "DELETE"
