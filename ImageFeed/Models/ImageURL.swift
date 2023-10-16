@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ImageURL: Decodable {
+struct ImageURL: Codable {
   var profileImage: ProfileImageURL
   
   enum CodingKeys: String, CodingKey {
@@ -15,7 +15,7 @@ struct ImageURL: Decodable {
   }
 }
 
-struct ProfileImageURL: Decodable {
+struct ProfileImageURL: Codable {
   let small: String
   let medium: String
 }

@@ -7,21 +7,17 @@
 
 import UIKit
 import ProgressHUD
+import SwiftUI
 
 class SplashViewController: UIViewController {
   //  MARK: - Private Properties
-  
-  private let ShowAuthenticationScreefetchProfilenSegueIdentifier = "ShowAuthenticationSauthViewControllercreen"
+ 
   private let showAuthFlowIdentifier = "showAuthFlow" //
   
-  private let oauth2Service = OAuth2Service.shared //
-  private let oauth2TokenStorage = OAuth2TokenStorage.shared //
-  
+  private let oauth2Service = OAuth2Service() //
   private let profileService = ProfileService.shared //
-  private let profileImageService = ProfileImageService.shared //
-  
-  private var authCode: String? //
-  private var alertPresenter: IAlertPresenterProtocol! //
+  private var alertPresenter = AlertPresenter() //
+  private var wasChecked = false
   
   private lazy var splashImage: UIImageView = { //
     let imageView = UIImageView()
@@ -33,24 +29,14 @@ class SplashViewController: UIViewController {
   //  MARK: - Override Methods
   override func viewDidLoad() { //
     super.viewDidLoad()
-    view.backgroundColor = .ypBlack
-    alertPresenter = AlertPresenter(delegate: self)
     addView()
     setupConstraints()
+    alertPresenter.delegate = self
   }
   
   override func viewDidAppear(_ animated: Bool) { //
     super.viewDidAppear(animated)
-    
-    if let token = oauth2TokenStorage.token {
-      fetchProfile(token: token)
-    } else if authCode == nil {
-      let authViewController = UIStoryboard(name: "Main", bundle: .main).instantiateViewController(identifier: "authVC")
-      guard let authVC = authViewController as? AuthViewController else { return }
-      authVC.delegate = self
-      authVC.modalPresentationStyle = .fullScreen
-      present(authVC, animated: true)
-    }
+    checkAuthStatus()
   }
   
   override func viewWillAppear(_ animated: Bool) { //
@@ -66,6 +52,7 @@ class SplashViewController: UIViewController {
 //  MARK: -  Private Methods
 extension SplashViewController {
   private func addView() {
+    view.backgroundColor = .ypBlack
     view.addSubview(splashImage)
   }
   
@@ -76,6 +63,30 @@ extension SplashViewController {
     ])
   }
   
+  private func checkAuthStatus() {
+    guard !wasChecked else { return }
+    wasChecked = true
+    if oauth2Service.isAuthenticated {
+      UIBlockingProgressHUD.show()
+      
+      fetchProfile { [weak self] in
+        UIBlockingProgressHUD.dismiss()
+        self?.switchToTabBarController()
+      }
+    } else {
+    showAuthController()
+    }
+  }
+  
+  private func showAuthController() {
+    let storyboard = UIStoryboard(name: "Main", bundle: .main)
+    let viewController = storyboard.instantiateViewController(identifier: "AuthViewControllerID")
+    guard let authViewController = viewController as? AuthViewController else { return }
+    authViewController.delegate = self
+    authViewController.modalPresentationStyle = .fullScreen
+    present(authViewController, animated: true)
+  }
+  
   private func switchToTabBarController() { //
     guard let window = UIApplication.shared.windows.first else {
       fatalError("Invalid Configuration")
@@ -84,55 +95,50 @@ extension SplashViewController {
     let tabBarController = UIStoryboard(name: "Main", bundle: .main).instantiateViewController(withIdentifier: "TabBarViewController")
     window.rootViewController = tabBarController
   }
+}
   
-  private func fetchProfile(token: String) { //
-    profileService.fetchProfile(token) { [weak self] result in
-      guard let self = self else { return }
-      
-      switch result {
-      case .success(let profileResult):
-        UIBlockingProgressHUD.dismiss()
-        self.profileImageService.fetchProfileImageURL(profileResult.userName) {  _ in }
-        self.switchToTabBarController()
-        
-      case .failure(let error):
-        self.alertPresenter.preparingDataAndDisplay(alertText: "Не удалось войти в систему. \(error.localizedDescription)") {
-          self.performSegue(withIdentifier: self.showAuthFlowIdentifier, sender: nil)
-          self.authCode = nil
-        }
-        UIBlockingProgressHUD.dismiss()
-      }
-    }
-  }
-}
-
-extension SplashViewController: IAlertPresenterDelegate { //
-  func showAlert(alert: UIAlertController) {
-    self.present(alert, animated: true, completion: nil)
-  }
-}
 
 //  MARK: -  AuthViewControllerDelegate
 extension SplashViewController: AuthViewControllerDelegate { //
   func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
-    UIBlockingProgressHUD.show()
-    authCode = code
     
-    vc.dismiss(animated: true) { [weak self] in
+    dismiss(animated: true) { [weak self] in
       guard let self = self else { return }
-      
-      OAuth2Service.shared.fetchOAuthToken(by: code) { result in
-        switch result {
-        case .success(let token):
-          self.fetchProfile(token: token)
-        case .failure(let error):
-          self.alertPresenter.preparingDataAndDisplay(alertText: "Не удалось войти в систему. \(error.localizedDescription)") {
-            self.performSegue(withIdentifier: self.showAuthFlowIdentifier, sender: nil)
-            self.authCode = nil
-          }
+      self.fetchOAuthToken(code)
+    }
+  }
+  
+  private func fetchOAuthToken(_ code: String) {
+    UIBlockingProgressHUD.show()
+    
+    oauth2Service.fetchOAuthToken(code) { [weak self] authResult in
+      switch authResult {
+      case .success(_):
+        self?.fetchProfile(completion: {
           UIBlockingProgressHUD.dismiss()
-        }
+        })
+      case .failure(let error):
+        self?.showLoginAlert(error: error)
+        UIBlockingProgressHUD.dismiss()
       }
+    }
+  }
+  
+  private func fetchProfile(completion: @escaping() -> Void) {
+    profileService.fetchProfile { [weak self] profileResult in
+      switch profileResult {
+      case .success(_):
+        self?.switchToTabBarController()
+      case .failure(let error):
+        self?.showLoginAlert(error: error)
+      }
+      completion()
+    }
+  }
+  
+  private func showLoginAlert(error: Error) {
+    alertPresenter.showAlert(title: "Что-то пошло не так :(", message: "Не удалось войти в систему \(error.localizedDescription)") {
+      self.performSegue(withIdentifier: self.showAuthFlowIdentifier, sender: nil)
     }
   }
 }

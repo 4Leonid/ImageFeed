@@ -11,40 +11,45 @@ import UIKit
 
 final class ProfileService {
   static let shared = ProfileService()
-  private let networkClient = NetworkClient.shared
   private(set) var profile: Profile?
+  private var currentTask: URLSessionTask?
+  private let builder: URLRequestBuilder
   
-  func fetchProfile(_ token: String, completion: @escaping (Result<ProfileResult, Error>) -> Void) {
-    guard let urlRequestSelfProfile = selfProfileRequest() else { return }
+  init(builder: URLRequestBuilder = .shared) {
+    self.builder = builder
+  }
+  
+  func fetchProfile(completion: @escaping (Result<Profile, Error>) -> Void) {
     
-    let task = networkClient.getObject(dataType: ProfileResult.self, for: urlRequestSelfProfile) { [weak self] result in
-      guard let self = self else { return }
+    currentTask?.cancel()
+    guard let urlRequest = makeFetchProfileRequest() else {
+      assertionFailure("Invalid request")
+      completion(.failure(NetworkError.invalidRequest))
+      return
+    }
+    
+    let session = URLSession.shared
+    currentTask = session.objectTask(for: urlRequest) { [weak self] (response: Result<ProfileResult, Error>) in
       
-      switch result {
+      self?.currentTask = nil
+      switch response {
       case .success(let profileResult):
-        let newProfile = self.convertToProfile(from: profileResult)
-        self.profile = newProfile
-        completion(.success(profileResult))
+        let profile = Profile(result: profileResult)
+        self?.profile = profile
+        completion(.success(profile))
       case .failure(let error):
         completion(.failure(error))
       }
     }
-    task.resume()
   }
   
-  private func convertToProfile(from profileResult: ProfileResult, image: UIImage = UIImage()) -> Profile? {
-    return Profile(
-      username: profileResult.userName,
-      firstName: profileResult.firstName,
-      lastName: profileResult.lastName,
-      bio: profileResult.bio ?? ""
+  
+  private func makeFetchProfileRequest() -> URLRequest? {
+    builder.makeHTTPRequest(
+      path: "/me",
+      httpMethod: "GET",
+      baseURLString: Constants.DefaultBaseURL
     )
   }
 }
 
-//  MARK: -  Request methods
-extension ProfileService {
-  private func selfProfileRequest() -> URLRequest? {
-    URLRequest.makeHTTPRequest(path: "/me")
-  }
-}

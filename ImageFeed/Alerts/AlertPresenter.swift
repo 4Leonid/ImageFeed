@@ -7,17 +7,17 @@
 
 import UIKit
 
-struct AlertPresenter: IAlertPresenterProtocol {
-  weak var delegate: IAlertPresenterDelegate?
+final class AlertPresenter {
+  weak var delegate: UIViewController?
   
-  func preparingDataAndDisplay(alertText: String, handler: @escaping () -> Void) {
-    let alert = UIAlertController(title: "Что-то пошло не так", message: alertText, preferredStyle: .alert)
-    
+  func showAlert(title: String, message: String, handler: @escaping () -> Void) {
+    let alert = UIAlertController(title: title,
+                                  message: message,
+                                  preferredStyle: .alert)
     let alertAction = UIAlertAction(title: "OK", style: .default) { _ in
       handler()
     }
-    
     alert.addAction(alertAction)
-    delegate?.showAlert(alert: alert)
+    delegate?.present(alert, animated: true)
   }
 }

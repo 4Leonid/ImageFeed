@@ -9,15 +9,18 @@ import Foundation
 
 struct Profile {
   let username: String
-  let firstName: String
-  let lastName: String
-  let bio: String
-  
-  var name: String {
-    "\(firstName) \(lastName)"
-  }
-  
-  var loginName: String {
-    "@\(username)"
+  let name: String
+  let loginName: String
+  let bio: String?
+}
+
+extension Profile {
+  init(result profile: ProfileResult) {
+    self.init(
+      username: profile.userLogin,
+      name: "\(profile.firstName ?? "") \(profile.lastName ?? "")",
+      loginName: "@\(profile.userLogin)",
+      bio: profile.bio
+    )
   }
 }

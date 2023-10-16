@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import ProgressHUD
+//import ProgressHUD
 import Kingfisher
 
 final class ProfileViewController: UIViewController {
@@ -74,32 +74,59 @@ final class ProfileViewController: UIViewController {
     setViews()
     setConstraints()
     
+    if let url = ProfileImageService.shared.avatarURL {
+      updateAvatar(url: url)
+    }
+    
     profileImageServiceObserver = NotificationCenter.default.addObserver(
       forName: ProfileImageService.DidChangeNotification,
       object: nil,
       queue: .main
-      ) { [weak self] _ in
+      ) { [weak self] notification  in
         guard let self = self else { return }
-        self.updateAvatar()
+        self.updateAvatar(notification: notification)
       }
-    updateAvatar()
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    
+    guard let profile = ProfileService.shared.profile else {
+      assertionFailure("No profile")
+      return
+    }
+    nameLabel.text = profile.name
+    descriptionLabel.text = profile.bio
+    loginNameLabel.text = profile.loginName
+    
+    ProfileImageService.shared.fetchProfileImageURL(userName: profile.username) { _ in
+      
+    }
   }
   
   //  MARK: - Public Methods
-  @objc func didTapLogoutButton() { }
+  @objc func didTapLogoutButton() {
+    print("didTappedExitButton")
+  }
 }
 
 //  MARK: -  Private Methods
 extension ProfileViewController {
-  private func updateAvatar() {
+  private func updateAvatar(notification: Notification) {
     guard
-      let profileImageURL = ProfileImageService.shared.avatarURL,
-      let imageURL = URL(string: profileImageURL)
+      isViewLoaded,
+      let userInfo = notification.userInfo,
+      let profileImageURL = userInfo["URL"] as? String,
+      let url = URL(string: profileImageURL)
     else { return }
     
+    updateAvatar(url: url)
+  }
+  
+  private func updateAvatar(url: URL) {
     avatarImageView.kf.indicatorType = .activity
-    avatarImageView.kf.setImage(with: imageURL,
-      placeholder: UIImage(systemName: "person.crop.circle"))
+    let processor = RoundCornerImageProcessor(cornerRadius: 61)
+    avatarImageView.kf.setImage(with: url, options: [.processor(processor)])
   }
   
   private func setViews() {
@@ -119,7 +146,6 @@ extension ProfileViewController {
       logoutButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
       stackView.leadingAnchor.constraint(equalTo: avatarImageView.leadingAnchor),
       stackView.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 8),
-      
     ])
   }
 }
