@@ -6,9 +6,13 @@
 //
 
 import UIKit
+//import ProgressHUD
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
   //  MARK: - Private Properties
+  private var profileImageServiceObserver: NSObjectProtocol?
+  
   private lazy var avatarImageView: UIImageView = {
     let imageView = UIImageView()
     imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -67,18 +71,65 @@ final class ProfileViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .ypBlack
-    addViews()
-    activateConstraints()
-
+    setViews()
+    setConstraints()
+    
+    if let url = ProfileImageService.shared.avatarURL {
+      updateAvatar(url: url)
+    }
+    
+    profileImageServiceObserver = NotificationCenter.default.addObserver(
+      forName: ProfileImageService.DidChangeNotification,
+      object: nil,
+      queue: .main
+      ) { [weak self] notification  in
+        guard let self = self else { return }
+        self.updateAvatar(notification: notification)
+      }
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    
+    guard let profile = ProfileService.shared.profile else {
+      assertionFailure("No profile")
+      return
+    }
+    nameLabel.text = profile.name
+    descriptionLabel.text = profile.bio
+    loginNameLabel.text = profile.loginName
+    
+    ProfileImageService.shared.fetchProfileImageURL(userName: profile.username) { _ in
+      
+    }
   }
   
   //  MARK: - Public Methods
-  @objc func didTapLogoutButton() { }
+  @objc func didTapLogoutButton() {
+    print("didTappedExitButton")
+  }
 }
 
 //  MARK: -  Private Methods
 extension ProfileViewController {
-  private func addViews() {
+  private func updateAvatar(notification: Notification) {
+    guard
+      isViewLoaded,
+      let userInfo = notification.userInfo,
+      let profileImageURL = userInfo["URL"] as? String,
+      let url = URL(string: profileImageURL)
+    else { return }
+    
+    updateAvatar(url: url)
+  }
+  
+  private func updateAvatar(url: URL) {
+    avatarImageView.kf.indicatorType = .activity
+    let processor = RoundCornerImageProcessor(cornerRadius: 61)
+    avatarImageView.kf.setImage(with: url, options: [.processor(processor)])
+  }
+  
+  private func setViews() {
     view.addSubview(avatarImageView)
     view.addSubview(logoutButton)
     view.addSubview(stackView)
@@ -87,7 +138,7 @@ extension ProfileViewController {
     stackView.addArrangedSubview(descriptionLabel)
   }
   
-  private func activateConstraints() {
+  private func setConstraints() {
     NSLayoutConstraint.activate([
       avatarImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
       avatarImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
@@ -95,7 +146,6 @@ extension ProfileViewController {
       logoutButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
       stackView.leadingAnchor.constraint(equalTo: avatarImageView.leadingAnchor),
       stackView.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 8),
-      
     ])
   }
 }

@@ -15,7 +15,9 @@ protocol WebViewViewControllerDelegate: AnyObject {
 }
 
 final class WebViewViewController: UIViewController {
-
+  //  MARK: - Private Properties
+  private var estimatedProgressObservation: NSKeyValueObservation?
+  
   //  MARK: - IB Outlets
   @IBOutlet private var webView: WKWebView!
   @IBOutlet private var progressView: UIProgressView!
@@ -27,15 +29,24 @@ final class WebViewViewController: UIViewController {
     webView.navigationDelegate = self
     var urlComponents = URLComponents(string: UnsplashAuthorizeURLString)!
     urlComponents.queryItems = [
-      URLQueryItem(name: "client_id", value: Constants.AccessKey),
-      URLQueryItem(name: "redirect_uri", value: Constants.RedirectURI),
+      URLQueryItem(name: "client_id", value: Constants.accessKey),
+      URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
       URLQueryItem(name: "response_type", value: "code"),
-      URLQueryItem(name: "scope", value: Constants.AccessScope)
+      URLQueryItem(name: "scope", value: Constants.accessScope)
     ]
     let url = urlComponents.url!
     
     let request = URLRequest(url: url)
     webView.load(request)
+    
+    //New
+    estimatedProgressObservation = webView.observe(
+      \.estimatedProgress,
+       options: [],
+       changeHandler: { [weak self] _, _ in
+         guard let self = self else { return }
+         self.updateProgress()
+       })
     
     updateProgress()
   }
