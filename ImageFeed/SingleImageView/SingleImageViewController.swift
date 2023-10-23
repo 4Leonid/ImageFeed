@@ -12,6 +12,8 @@ final class SingleImageViewController: UIViewController {
   @IBOutlet weak private var imageView: UIImageView!
   @IBOutlet weak private var scrollView: UIScrollView!
   
+  var singleImageURL: URL?
+  
   //  MARK: - Public Properties
   var image: UIImage! {
     didSet {

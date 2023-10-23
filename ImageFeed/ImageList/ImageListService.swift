@@ -23,32 +23,34 @@ final class ImageListService {
   
   func fetchPhotosNextPage() {
     assert(Thread.isMainThread)
-    let nextPage = lastLoadedPage == nil ? 1 : lastLoadedPage! + 1
     guard task == nil else {
       print("Fetching in progress. Cannot start a new request.")
       return
     }
+    let nextPage = lastLoadedPage == nil ? 1 : lastLoadedPage! + 1
     guard let token = oauth2TokenStorage.token else { return }
     guard let request = fetchImageListRequest(token, page: String(nextPage), perPage: page) else { return }
     
     let session = URLSession.shared
     let dataTask = session.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
-      DispatchQueue.main.async {
+      DispatchQueue.main.async { [weak self] in
+        guard let self else { return }
+        self.task = nil
         switch result {
         case .success(let photoResults):
-          photoResults.forEach { image in
+          photoResults.forEach { [weak self] image in
             guard let newPhoto = self?.createPhoto(image) else { return }
             self?.photos.append(newPhoto)
           }
-          self?.lastLoadedPage = nextPage
           NotificationCenter.default.post(name: ImageListService.didChangeNotification, object: nil)
+          self.lastLoadedPage = nextPage
         case .failure(let error):
           assertionFailure("Cant get image \(error)")
         }
       }
     }
     task = dataTask
-    task?.resume()
+    dataTask.resume()
   }
   
   private func fetchImageListRequest(_ token: String, page: String, perPage: String) -> URLRequest? {
@@ -83,8 +85,8 @@ struct Photo {
   let size: CGSize
   let createdAt: Date?
   let welcomeDescription: String?
-  let thumbImageURL: String
-  let largeImageURL: String
+  let thumbImageURL: String?
+  let largeImageURL: String?
   let isLiked: Bool
 }
 
