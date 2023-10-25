@@ -8,14 +8,15 @@
 import UIKit
 
 final class ImagesListViewController: UIViewController {
+
   //  MARK: - IB Outlets
   @IBOutlet private var tableView: UITableView!
   
   //  MARK: - Private Properties
-  //private let photosName: [String] = (0..<20).map { "\($0)" }
   private let ShowSingleImageSegueIdentifier = "ShowSingleImage"
   private var photos: [Photo] = []
-  private var imagesListService = ImageListService()
+  private var imagesListService = ImageListService.shared
+  private var alertPresenter = AlertPresenter()
   
   private lazy var dateFormatter: DateFormatter = {
     let formatter = DateFormatter()
@@ -31,8 +32,8 @@ final class ImagesListViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
-    //photos = imagesListService.photos
     imagesListService.fetchPhotosNextPage()
+    alertPresenter.delegate = self
     
     NotificationCenter.default.addObserver(
       forName: ImageListService.didChangeNotification,
@@ -76,24 +77,41 @@ final class ImagesListViewController: UIViewController {
 extension ImagesListViewController: UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     imagesListService.photos.count
-    //photos.count
   }
   
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
     if indexPath.row == tableView.numberOfRows(inSection: 0) - 1 {
       imagesListService.fetchPhotosNextPage()
-      //tableView.reloadData()
     }
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: ImageListCell.reuseIdentifier, for: indexPath)
     guard let imageListCell = cell as? ImageListCell else { return UITableViewCell() }
-    
+    imageListCell.delegate = self
     configCell(for: imageListCell, with: indexPath)
     return imageListCell
   }
-  
+}
+
+//  MARK: - ImagesListCellDelegate
+extension ImagesListViewController: ImagesListCellDelegate {
+  func imageListCellDidTapLike(_ cell: ImageListCell) {
+    guard let indexPath = tableView.indexPath(for: cell) else { return }
+    let photo = photos[indexPath.row]
+    UIBlockingProgressHUD.show()
+    imagesListService.changeLike(photoId: photo.id, isLike: photo.isLiked) { result in
+      switch result {
+      case .success:
+        self.photos = self.imagesListService.photos
+        cell.setIsLiked(isLiked: self.photos[indexPath.row].isLiked)
+        UIBlockingProgressHUD.dismiss()
+      case .failure(let error):
+        UIBlockingProgressHUD.dismiss()
+        self.alertPresenter.showAlert(title: "Error", message: "Something went wrong\(error)") {}
+      }
+    }
+  }
 }
 
 //  MARK: - UITableViewDelegate

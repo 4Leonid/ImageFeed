@@ -8,6 +8,7 @@
 import UIKit
 
 final class ImageListService {
+  static let shared = ImageListService()
   private (set) var photos: [Photo] = []
   private var lastLoadedPage: Int?
   private var task: URLSessionTask?
@@ -17,7 +18,7 @@ final class ImageListService {
   static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
   private let page = "10"
   
-  init(builder: URLRequestBuilder = .shared) {
+  private init(builder: URLRequestBuilder = .shared) {
     self.builder = builder
   }
   
@@ -59,6 +60,48 @@ final class ImageListService {
       httpMethod: "GET",
       baseURLString: Constants.DefaultBaseURL
     )
+    return request
+  }
+  
+  func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
+    assert(Thread.isMainThread)
+    guard let token = oauth2TokenStorage.token else { return }
+    let request = makeLikeRequest(token, photoId: photoId, method: isLike ? "DELETE" : "POST")
+    guard let request = request else { return }
+    let session = URLSession.shared
+    let task = session.objectTask(for: request) { [weak self] (result: Result<IsLiked, Error>) in
+      guard let self = self else { return }
+      self.task = nil
+      
+      switch result {
+      case .success(let photoResult):
+//        let isLiked = photoResult.photo?.isLiked ?? false
+        print(photos)
+        if let index = self.photos.firstIndex(where: { $0.id == photoResult.photo?.id }) {
+          let photo = self.photos[index]
+          let newPhoto = Photo(
+            id: photo.id,
+            size: photo.size,
+            createdAt: photo.createdAt,
+            welcomeDescription: photo.welcomeDescription,
+            thumbImageURL: photo.thumbImageURL,
+            largeImageURL: photo.largeImageURL,
+            isLiked: !photo.isLiked
+          )
+          self.photos = self.photos.withReplaced(itemAt: index, newValue: newPhoto)
+        }
+        completion(.success(()))
+      case .failure(let error):
+        completion(.failure(error))
+      }
+    }
+    self.task = task
+    task.resume()
+  }
+  
+  
+  private func makeLikeRequest(_ token: String, photoId: String, method: String) -> URLRequest? {
+    let request = builder.makeHTTPRequest(path: "photos/\(photoId)/like", httpMethod: method, baseURLString: Constants.DefaultBaseURL)
     return request
   }
   
@@ -117,4 +160,8 @@ struct UrlsResult: Codable {
   let regular: String
   let small: String
   let thumb: String
+}
+
+struct IsLiked: Codable {
+  let photo: PhotoResult?
 }
