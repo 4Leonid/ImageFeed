@@ -121,6 +121,11 @@ final class ImageListService {
     )
     return photo
   }
+  
+  func cleanSession() {
+    task = nil
+    photos = []
+  }
 }
 
 struct Photo {

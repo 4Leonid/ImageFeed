@@ -8,10 +8,12 @@
 import UIKit
 //import ProgressHUD
 import Kingfisher
+import WebKit
 
 final class ProfileViewController: UIViewController {
   //  MARK: - Private Properties
   private var profileImageServiceObserver: NSObjectProtocol?
+  private var oauthToken = OAuth2TokenStorage.shared
   
   private lazy var avatarImageView: UIImageView = {
     let imageView = UIImageView()
@@ -106,7 +108,16 @@ final class ProfileViewController: UIViewController {
   
   //  MARK: - Public Methods
   @objc func didTapLogoutButton() {
-    print("didTappedExitButton")
+    showAlert()
+  }
+  
+  static func clean() {
+    HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+    WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+      records.forEach { record in
+        WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+      }
+    }
   }
 }
 
@@ -147,5 +158,44 @@ extension ProfileViewController {
       stackView.leadingAnchor.constraint(equalTo: avatarImageView.leadingAnchor),
       stackView.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 8),
     ])
+  }
+  
+  private func logOut() {
+    cleanAllService()
+    switchToSplashViewController()
+  }
+  
+  private func cleanAllService() {
+    ProfileService.shared.cleanSession()
+    ProfileImageService.shared.cleanSession()
+    ImageListService.shared.cleanSession()
+    ProfileViewController.clean()
+    //oauthToken.removeToken()
+  }
+  
+  private func switchToSplashViewController() {
+    guard let window = UIApplication.shared.windows.first else {
+      assertionFailure("Invalid configuration")
+      return
+    }
+    window.rootViewController = SplashViewController()
+  }
+  
+  private func showAlert() {
+    let alertController = UIAlertController(
+      title: "Выход",
+      message: "Вы уверены что хотите выйти",
+      preferredStyle: .alert
+    )
+    
+    let yesAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
+      guard let self = self else { return }
+      self.logOut()
+    }
+    
+    let noAction = UIAlertAction(title: "Нет", style: .default)
+    alertController.addAction(yesAction)
+    alertController.addAction(noAction)
+    present(alertController, animated: true)
   }
 }

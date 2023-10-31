@@ -7,7 +7,6 @@
 
 import UIKit
 import ProgressHUD
-import SwiftUI
 
 class SplashViewController: UIViewController {
   //  MARK: - Private Properties
@@ -17,7 +16,7 @@ class SplashViewController: UIViewController {
   private let oauth2Service = OAuth2Service() //
   private let profileService = ProfileService.shared //
   private var alertPresenter = AlertPresenter() //
-  private var wasChecked = false
+  var wasChecked = false
   
   private lazy var splashImage: UIImageView = { //
     let imageView = UIImageView()
@@ -47,6 +46,10 @@ class SplashViewController: UIViewController {
   override var preferredStatusBarStyle: UIStatusBarStyle { //
     .lightContent
   }
+  
+  deinit {
+    print("SplashVC deinit")
+  }
 }
 
 //  MARK: -  Private Methods
@@ -74,7 +77,7 @@ extension SplashViewController {
         self?.switchToTabBarController()
       }
     } else {
-    showAuthController()
+      showAuthController()
     }
   }
   
@@ -95,6 +98,8 @@ extension SplashViewController {
     let tabBarController = UIStoryboard(name: "Main", bundle: .main).instantiateViewController(withIdentifier: "TabBarViewController")
     window.rootViewController = tabBarController
   }
+  
+
 }
   
 
