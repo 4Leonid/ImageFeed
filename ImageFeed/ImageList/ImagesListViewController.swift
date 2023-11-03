@@ -139,8 +139,10 @@ extension ImagesListViewController {
   private func configCell(for cell: ImageListCell, with indexPath: IndexPath) {
     let placeholder = UIImage(named: "scribe")
     if let thumbImageURL = imagesListService.photos[indexPath.row].thumbImageURL,
-       let imageURL = URL(string: thumbImageURL) {
+       let imageURL = URL(string: thumbImageURL),
+       let data = imagesListService.photos[indexPath.row].createdAt {
       cell.pictureImage.kf.indicatorType = .activity
+      cell.dataLabel.text = dateFormatter.string(from: data)
       cell.pictureImage.kf.setImage(with: imageURL, placeholder: placeholder) { [weak self] _ in
         guard let self = self else { return }
         self.tableView.reloadRows(at: [indexPath], with: .automatic)
