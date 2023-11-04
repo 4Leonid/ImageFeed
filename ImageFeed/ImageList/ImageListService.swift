@@ -10,13 +10,13 @@ import UIKit
 final class ImageListService {
   static let shared = ImageListService()
   private (set) var photos: [Photo] = []
-  private var lastLoadedPage: Int?
   private var task: URLSessionTask?
   private let oauth2TokenStorage = OAuth2TokenStorage.shared
   private let builder: URLRequestBuilder
   private let dateFormater = ISO8601DateFormatter()
   static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
   private let page = "10"
+  private var lastLoadedPage = 1
   
   private init(builder: URLRequestBuilder = .shared) {
     self.builder = builder
@@ -28,9 +28,9 @@ final class ImageListService {
       print("Fetching in progress. Cannot start a new request.")
       return
     }
-    let nextPage = lastLoadedPage == nil ? 1 : lastLoadedPage! + 1
+    
     guard let token = oauth2TokenStorage.token else { return }
-    guard let request = fetchImageListRequest(token, page: String(nextPage), perPage: page) else { return }
+    guard let request = fetchImageListRequest(token, page: String(lastLoadedPage), perPage: page) else { return }
     
     let session = URLSession.shared
     let dataTask = session.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
@@ -44,7 +44,7 @@ final class ImageListService {
             self?.photos.append(newPhoto)
           }
           NotificationCenter.default.post(name: ImageListService.didChangeNotification, object: nil)
-          self.lastLoadedPage = nextPage
+          self.lastLoadedPage += 1
         case .failure(let error):
           assertionFailure("Cant get image \(error)")
         }
@@ -75,8 +75,7 @@ final class ImageListService {
       
       switch result {
       case .success(let photoResult):
-//        let isLiked = photoResult.photo?.isLiked ?? false
-        print(photos)
+       
         if let index = self.photos.firstIndex(where: { $0.id == photoResult.photo?.id }) {
           let photo = self.photos[index]
           let newPhoto = Photo(

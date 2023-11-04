@@ -20,8 +20,10 @@ final class ImagesListViewController: UIViewController {
   
   private lazy var dateFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateStyle = .long
-    formatter.timeStyle = .none
+    //    formatter.dateStyle = .long
+    //    formatter.timeStyle = .none
+    formatter.dateFormat = "dd MMMM yyyy"
+    formatter.locale = Locale(identifier: "ru_RU")
     return formatter
   }()
   
@@ -100,17 +102,19 @@ extension ImagesListViewController: ImagesListCellDelegate {
     guard let indexPath = tableView.indexPath(for: cell) else { return }
     let photo = photos[indexPath.row]
     UIBlockingProgressHUD.show()
-    imagesListService.changeLike(photoId: photo.id, isLike: photo.isLiked) { result in
+    imagesListService.changeLike(photoId: photo.id, isLike: photo.isLiked) { [weak self] result in
+      guard let self = self else { return }
       switch result {
       case .success:
         self.photos = self.imagesListService.photos
-        cell.setIsLiked(isLiked: self.photos[indexPath.row].isLiked)
+//          defer { cell.setIsLiked(isLiked: self.photos[indexPath.row].isLiked) }
         UIBlockingProgressHUD.dismiss()
       case .failure(let error):
         UIBlockingProgressHUD.dismiss()
         self.alertPresenter.showAlert(title: "Error", message: "Something went wrong\(error)") {}
       }
     }
+      cell.setIsLiked(isLiked: photos[indexPath.row].isLiked)
   }
 }
 
@@ -147,6 +151,13 @@ extension ImagesListViewController {
         guard let self = self else { return }
         self.tableView.reloadRows(at: [indexPath], with: .automatic)
       }
+      let isLiked = imagesListService.photos[indexPath.row].isLiked == false
+//      let likeImage = isLiked 
+//        ? UIImage(named: "no_active")
+//        : UIImage(named: "active")
+//      cell.likeButton.setImage(likeImage, for: .normal)
+        cell.setIsLiked(isLiked: isLiked)
+//      cell.selectionStyle = .none
     }
   }
 }

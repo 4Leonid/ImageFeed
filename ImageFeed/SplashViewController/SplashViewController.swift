@@ -67,8 +67,8 @@ extension SplashViewController {
   }
   
   private func checkAuthStatus() {
-    guard !wasChecked else { return }
-    wasChecked = true
+//    guard !wasChecked else { return }
+//    wasChecked = true
     if oauth2Service.isAuthenticated {
       UIBlockingProgressHUD.show()
       
