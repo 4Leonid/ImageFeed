@@ -12,6 +12,8 @@ final class SingleImageViewController: UIViewController {
   @IBOutlet weak private var imageView: UIImageView!
   @IBOutlet weak private var scrollView: UIScrollView!
   
+  var singleImageURL: URL?
+  
   //  MARK: - Public Properties
   var image: UIImage! {
     didSet {
@@ -26,8 +28,9 @@ final class SingleImageViewController: UIViewController {
     super.viewDidLoad()
     scrollView.minimumZoomScale = 0.1
     scrollView.maximumZoomScale = 1.25
-    imageView.image = image
-    rescaleAndCenterImageInScrollView(image: image)
+    //imageView.image = image
+    //rescaleAndCenterImageInScrollView(image: image)
+    singleImageLoad()
   }
   
   //  MARK: - IB Actions
@@ -69,5 +72,20 @@ extension SingleImageViewController {
       let x = (newContentSize.width - visibleRectSize.width) / 2
       let y = (newContentSize.height - visibleRectSize.height) / 2
       scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
+  }
+  
+  private func singleImageLoad() {
+    UIBlockingProgressHUD.show()
+    imageView.kf.setImage(with: singleImageURL) { [weak self] result in
+      UIBlockingProgressHUD.dismiss()
+      
+      guard let self = self else { return }
+      switch result {
+      case .success(let imageResult):
+        self.rescaleAndCenterImageInScrollView(image: imageResult.image)
+      case .failure(let error):
+        print(error)
+      }
+    }
   }
 }

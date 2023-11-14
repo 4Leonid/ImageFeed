@@ -17,9 +17,7 @@ enum NetworkError: Error {
 
 extension URLSession {
   
-  func objectTask<T: Decodable>(
-    for request: URLRequest,
-    completion: @escaping (Result<T, Error>) -> Void
+  func objectTask<T: Decodable>(for request: URLRequest, completion: @escaping (Result<T, Error>) -> Void
   ) -> URLSessionTask {
     let fulfillCompletion: (Result<T, Error>) -> Void =
     { result in

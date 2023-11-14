@@ -43,13 +43,20 @@ final class ProfileService {
     }
   }
   
-  
   private func makeFetchProfileRequest() -> URLRequest? {
     builder.makeHTTPRequest(
       path: "/me",
       httpMethod: "GET",
       baseURLString: Constants.DefaultBaseURL
     )
+  }
+  
+  func cleanSession() {
+    currentTask?.cancel()
+    currentTask = nil 
+    //OAuth2TokenStorage.shared.token = nil
+    OAuth2TokenStorage.shared.removeToken()
+    profile = nil
   }
 }
 
