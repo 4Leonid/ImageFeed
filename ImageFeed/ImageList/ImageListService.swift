@@ -58,7 +58,7 @@ final class ImageListService {
     let request = builder.makeHTTPRequest(
       path: "/photos?page=\(page)&&per_page=\(perPage)",
       httpMethod: "GET",
-      baseURLString: Constants.DefaultBaseURL
+      baseURLString: Constants.defaultBaseURL.rawValue
     )
     return request
   }
@@ -100,7 +100,7 @@ final class ImageListService {
   
   
   private func makeLikeRequest(_ token: String, photoId: String, method: String) -> URLRequest? {
-    let request = builder.makeHTTPRequest(path: "photos/\(photoId)/like", httpMethod: method, baseURLString: Constants.DefaultBaseURL)
+    let request = builder.makeHTTPRequest(path: "photos/\(photoId)/like", httpMethod: method, baseURLString: Constants.defaultBaseURL.rawValue)
     return request
   }
   

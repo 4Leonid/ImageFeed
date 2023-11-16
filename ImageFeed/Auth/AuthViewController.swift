@@ -17,10 +17,18 @@ final class AuthViewController: UIViewController {
   weak var delegate: AuthViewControllerDelegate?
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    guard segue.identifier == ShowWebViewSegueIdentifier else { return }
-    guard let webViewViewController = segue.destination as? WebViewViewController else { return }
-    webViewViewController.delegate = self
-    
+    if segue.identifier == ShowWebViewSegueIdentifier {
+      guard
+        let webViewViewController = segue.destination as? WebViewViewController
+      else { fatalError("Failed to prepare for \(ShowWebViewSegueIdentifier)") }
+      let authHelper = AuthHelper()
+      let webViewPresenter = WebViewPresenter(authHelper: authHelper)
+      webViewViewController.presenter = webViewPresenter
+      webViewPresenter.view = webViewViewController
+      webViewViewController.delegate = self
+    } else {
+      super.prepare(for: segue, sender: sender)
+    }
   }
 }
 

@@ -6,14 +6,18 @@
 //
 
 import UIKit
-//import ProgressHUD
 import Kingfisher
 import WebKit
 
-final class ProfileViewController: UIViewController {
-  //  MARK: - Private Properties
-  private var profileImageServiceObserver: NSObjectProtocol?
-  private var oauthToken = OAuth2TokenStorage.shared
+protocol ProfileViewControllerProtocol: AnyObject {
+  var presenter: ProfileViewPresenterProtocol? { get set }
+  func updateAvatar(url: URL)
+  func configure(_ presenter: ProfileViewPresenterProtocol)
+}
+
+final class ProfileViewController: UIViewController & ProfileViewControllerProtocol {
+  
+  var presenter: ProfileViewPresenterProtocol?
   
   private lazy var avatarImageView: UIImageView = {
     let imageView = UIImageView()
@@ -75,71 +79,42 @@ final class ProfileViewController: UIViewController {
     view.backgroundColor = .ypBlack
     setViews()
     setConstraints()
-    
-    if let url = ProfileImageService.shared.avatarURL {
-      updateAvatar(url: url)
-    }
-    
-    profileImageServiceObserver = NotificationCenter.default.addObserver(
-      forName: ProfileImageService.DidChangeNotification,
-      object: nil,
-      queue: .main
-      ) { [weak self] notification  in
-        guard let self = self else { return }
-        self.updateAvatar(notification: notification)
-      }
+    presenter?.viewDidLoad()
   }
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
-    guard let profile = ProfileService.shared.profile else {
-      assertionFailure("No profile")
-      return
-    }
-    nameLabel.text = profile.name
-    descriptionLabel.text = profile.bio
-    loginNameLabel.text = profile.loginName
-    
-    ProfileImageService.shared.fetchProfileImageURL(userName: profile.username) { _ in
-      
-    }
+    presenter?.setupProfile(completion: { [weak self] profile in
+      self?.nameLabel.text = profile.name
+      self?.descriptionLabel.text = profile.bio
+      self?.loginNameLabel.text = profile.loginName
+    })
   }
   
   //  MARK: - Public Methods
   @objc func didTapLogoutButton() {
-    showAlert()
+    showAlert(
+      title: "Выход",
+      message: "Вы уверены что хотите выйти?") { [unowned self] in
+        self.logOut()
+      }
   }
   
-  static func clean() {
-    HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
-    WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
-      records.forEach { record in
-        WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
-      }
-    }
+  func configure(_ presenter: ProfileViewPresenterProtocol) {
+    self.presenter = presenter
+    self.presenter?.view = self
+  }
+  
+  func updateAvatar(url: URL) {
+    avatarImageView.kf.indicatorType = .activity
+    let processor = RoundCornerImageProcessor(cornerRadius: 61)
+    avatarImageView.kf.setImage(with: url, options: [.processor(processor)])
   }
 }
 
 //  MARK: -  Private Methods
 extension ProfileViewController {
-  private func updateAvatar(notification: Notification) {
-    guard
-      isViewLoaded,
-      let userInfo = notification.userInfo,
-      let profileImageURL = userInfo["URL"] as? String,
-      let url = URL(string: profileImageURL)
-    else { return }
-    
-    updateAvatar(url: url)
-  }
-  
-  private func updateAvatar(url: URL) {
-    avatarImageView.kf.indicatorType = .activity
-    let processor = RoundCornerImageProcessor(cornerRadius: 61)
-    avatarImageView.kf.setImage(with: url, options: [.processor(processor)])
-  }
-  
   private func setViews() {
     view.addSubview(avatarImageView)
     view.addSubview(logoutButton)
@@ -160,17 +135,9 @@ extension ProfileViewController {
     ])
   }
   
-  private func logOut() {
-    cleanAllService()
+  func logOut() {
+    presenter?.cleanAllService()
     switchToSplashViewController()
-  }
-  
-  private func cleanAllService() {
-    ProfileService.shared.cleanSession()
-    ProfileImageService.shared.cleanSession()
-    ImageListService.shared.cleanSession()
-    ProfileViewController.clean()
-    //oauthToken.removeToken()
   }
   
   private func switchToSplashViewController() {
@@ -180,22 +147,6 @@ extension ProfileViewController {
     }
     window.rootViewController = SplashViewController()
   }
-  
-  private func showAlert() {
-    let alertController = UIAlertController(
-      title: "Выход",
-      message: "Вы уверены что хотите выйти",
-      preferredStyle: .alert
-    )
-    
-    let yesAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
-      guard let self = self else { return }
-      self.logOut()
-    }
-    
-    let noAction = UIAlertAction(title: "Нет", style: .default)
-    alertController.addAction(yesAction)
-    alertController.addAction(noAction)
-    present(alertController, animated: true)
-  }
 }
+
+
