@@ -1,5 +1,5 @@
 //
-//  Constants.swift
+//  AuthConfiguration.swift
 //  ImageFeed
 //
 //  Created by Леонид Турко on 18.03.2023.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Constants {
+struct AuthConfiguration {
   //MARK: Unsplash api base paths
   static let DefaultBaseURL = "https://api.unsplash.com"
   static let baseURLString = "https://unsplash.com"
