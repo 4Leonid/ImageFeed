@@ -8,16 +8,30 @@
 import Foundation
 import WebKit
 
-protocol ProfileViewPresenterProtocol {
-  var view: ProfileViewControllerProtocol? { get set }
+public protocol ProfileViewPresenterProtocol {
   var profileImageServiceObserver: NSObjectProtocol? { get set }
   func cleanAllService()
-  func setupProfile(completion: @escaping ((Profile) -> Void))
   func viewDidLoad()
 }
 
 final class ProfileViewPresenter: ProfileViewPresenterProtocol {
-  weak var view: ProfileViewControllerProtocol?
+  
+  private let imagesListService: ImageListService
+  private let profileService: ProfileService
+  private let profileImageService: ProfileImageService
+  
+  
+  init(
+    imagesListService: ImageListService = .shared,
+    profileService: ProfileService = .shared,
+    profileImageService: ProfileImageService = .shared
+  ) {
+    self.imagesListService = imagesListService
+    self.profileService = profileService
+    self.profileImageService = profileImageService
+  }
+  
+  private(set) weak var view: ProfileViewControllerProtocol?
   weak var profileImageServiceObserver: NSObjectProtocol?
   
   func clean() {
@@ -29,23 +43,15 @@ final class ProfileViewPresenter: ProfileViewPresenterProtocol {
     }
   }
   
-  func cleanAllService() {
-    ProfileService.shared.cleanSession()
-    ProfileImageService.shared.cleanSession()
-    ImageListService.shared.cleanSession()
-    clean()
+  func attach(_ view: ProfileViewControllerProtocol) {
+    self.view = view
   }
   
-  func setupProfile(completion: @escaping ((Profile) -> Void)) {
-    guard let profile = ProfileService.shared.profile else {
-      assertionFailure("No profile")
-      return
-    }
-    completion(profile)
-    
-    ProfileImageService.shared.fetchProfileImageURL(userName: profile.username) { _ in
-
-    }
+  func cleanAllService() {
+    profileService.cleanSession()
+    profileImageService.cleanSession()
+    imagesListService.cleanSession()
+    clean()
   }
   
   func viewDidLoad() {
@@ -63,6 +69,21 @@ final class ProfileViewPresenter: ProfileViewPresenterProtocol {
       else { return }
       
       view?.updateAvatar(url: url)
+    }
+    setupProfile()
+  }
+}
+
+
+private extension ProfileViewPresenter {
+  func setupProfile() {
+    guard let profile = ProfileService.shared.profile else {
+      return
+    }
+    view?.update(profile: profile)
+    
+    ProfileImageService.shared.fetchProfileImageURL(userName: profile.username) { _ in
+      
     }
   }
 }

@@ -7,17 +7,17 @@
 
 import Foundation
 
-enum Constants: String {
-  case accessKey = "2oxuuWAfl4iBv-cL1S_RDCOWOAAj_N8yQuTMoe6OcKg"
-  case secretKey = "CwEF_obM6SDk_pXzQ_yR2r7lVEx27G81n97megWDhxw"
-  case redirectURI = "urn:ietf:wg:oauth:2.0:oob"
-  case accessScope = "public+read_user+write_likes"
-  case defaultBaseURL = "https://api.unsplash.com"
-  case authURLString = "https://unsplash.com"
+enum Constants {
+  static let accessKey = "2oxuuWAfl4iBv-cL1S_RDCOWOAAj_N8yQuTMoe6OcKg"
+  static let secretKey = "CwEF_obM6SDk_pXzQ_yR2r7lVEx27G81n97megWDhxw"
+  static let redirectURI = "urn:ietf:wg:oauth:2.0:oob"
+  static let accessScope = "public+read_user+write_likes"
+  static let defaultBaseURL = "https://api.unsplash.com"
+  static let authURLString = "https://unsplash.com/oauth/authorize"
   
-  case baseAuthTokenPath = "/oauth/token"
-  case bearerToken = "bearerToken"
-  case profileImageProviderDidChange = "ProfileImageProviderDidChange"
+  static let baseAuthTokenPath = "/oauth/token"
+  static let bearerToken = "bearerToken"
+  static let profileImageProviderDidChange = "ProfileImageProviderDidChange"
 }
 
 struct AuthConfiguration {
@@ -39,12 +39,12 @@ struct AuthConfiguration {
   
   static var standart: AuthConfiguration {
     return AuthConfiguration(
-      accessKey: Constants.accessKey.rawValue,
-      secretKey: Constants.secretKey.rawValue,
-      redirectURI: Constants.redirectURI.rawValue,
-      accessScope: Constants.accessScope.rawValue,
-      defaultBaseURL: Constants.defaultBaseURL.rawValue,
-      authURLString: Constants.authURLString.rawValue
+      accessKey: Constants.accessKey,
+      secretKey: Constants.secretKey,
+      redirectURI: Constants.redirectURI,
+      accessScope: Constants.accessScope,
+      defaultBaseURL: Constants.defaultBaseURL,
+      authURLString: Constants.authURLString
     )
   }
 }

@@ -9,7 +9,7 @@ import Foundation
 
 final class ProfileImageService {
   static let shared = ProfileImageService()
-  static let DidChangeNotification = Notification.Name(Constants.profileImageProviderDidChange.rawValue)
+  static let DidChangeNotification = Notification.Name(Constants.profileImageProviderDidChange)
   
   private (set) var avatarURL: URL?
   private var currentTask: URLSessionTask?
@@ -56,7 +56,7 @@ extension ProfileImageService {
     urlBuilder.makeHTTPRequest(
       path: "/users/\(username)",
       httpMethod: "GET",
-      baseURLString: Constants.defaultBaseURL.rawValue
+      baseURLString: Constants.defaultBaseURL
     )
   }
 }

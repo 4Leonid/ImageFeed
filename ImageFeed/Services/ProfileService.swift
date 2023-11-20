@@ -47,7 +47,7 @@ final class ProfileService {
     builder.makeHTTPRequest(
       path: "/me",
       httpMethod: "GET",
-      baseURLString: Constants.defaultBaseURL.rawValue
+      baseURLString: Constants.defaultBaseURL
     )
   }
   

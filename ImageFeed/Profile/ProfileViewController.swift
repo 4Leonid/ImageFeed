@@ -9,21 +9,28 @@ import UIKit
 import Kingfisher
 import WebKit
 
-protocol ProfileViewControllerProtocol: AnyObject {
-  var presenter: ProfileViewPresenterProtocol? { get set }
-  func updateAvatar(url: URL)
-  func configure(_ presenter: ProfileViewPresenterProtocol)
+public protocol ProfileViewControllerProtocol: AnyObject {
+    func updateAvatar(url: URL)
+    func update(profile: Profile)
 }
 
 final class ProfileViewController: UIViewController & ProfileViewControllerProtocol {
-  
-  var presenter: ProfileViewPresenterProtocol?
-  
+
+    private let presenter: ProfileViewPresenterProtocol
+
+    init(presenter: ProfileViewPresenterProtocol) {
+        self.presenter = presenter
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
   private lazy var avatarImageView: UIImageView = {
     let imageView = UIImageView()
     imageView.translatesAutoresizingMaskIntoConstraints = false
-    let profileImage = UIImage(named: "avatar")
-    imageView.image = profileImage
     return imageView
   }()
   
@@ -34,6 +41,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     button.setImage(buttonImage, for: .normal)
     button.addTarget(self, action: #selector(didTapLogoutButton), for: .touchUpInside)
     button.tintColor = .ypRed
+    button.accessibilityIdentifier = "logout button"
     return button
   }()
   
@@ -48,7 +56,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
   
   private lazy var nameLabel: UILabel = {
     let label = UILabel()
-    label.text = "Екатерина Новикова"
+//    label.text = "Екатерина Новикова"
     label.textColor = .white
     label.font = UIFont.systemFont(ofSize: 23, weight: .bold)
     return label
@@ -56,7 +64,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
   
   private lazy var loginNameLabel: UILabel = {
     let label = UILabel()
-    label.text = "@ekaterina_nov"
+//    label.text = "@ekaterina_nov"
     label.textColor = .ypGray
     label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
     return label
@@ -79,17 +87,17 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     view.backgroundColor = .ypBlack
     setViews()
     setConstraints()
-    presenter?.viewDidLoad()
+    presenter.viewDidLoad()
   }
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
-    presenter?.setupProfile(completion: { [weak self] profile in
-      self?.nameLabel.text = profile.name
-      self?.descriptionLabel.text = profile.bio
-      self?.loginNameLabel.text = profile.loginName
-    })
+//    presenter.setupProfile(completion: { [weak self] profile in
+//      self?.nameLabel.text = profile.name
+//      self?.descriptionLabel.text = profile.bio
+//      self?.loginNameLabel.text = profile.loginName
+//    })
   }
   
   //  MARK: - Public Methods
@@ -101,16 +109,17 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
       }
   }
   
-  func configure(_ presenter: ProfileViewPresenterProtocol) {
-    self.presenter = presenter
-    self.presenter?.view = self
-  }
-  
-  func updateAvatar(url: URL) {
-    avatarImageView.kf.indicatorType = .activity
-    let processor = RoundCornerImageProcessor(cornerRadius: 61)
-    avatarImageView.kf.setImage(with: url, options: [.processor(processor)])
-  }
+    func updateAvatar(url: URL) {
+        avatarImageView.kf.indicatorType = .activity
+      let processor = RoundCornerImageProcessor(cornerRadius: 35, backgroundColor: .clear)
+        avatarImageView.kf.setImage(with: url, options: [.processor(processor)])
+    }
+
+    func update(profile: Profile) {
+        nameLabel.text = profile.name
+        descriptionLabel.text = profile.bio
+        loginNameLabel.text = profile.loginName
+    }
 }
 
 //  MARK: -  Private Methods
@@ -136,7 +145,7 @@ extension ProfileViewController {
   }
   
   func logOut() {
-    presenter?.cleanAllService()
+    presenter.cleanAllService()
     switchToSplashViewController()
   }
   
@@ -148,5 +157,3 @@ extension ProfileViewController {
     window.rootViewController = SplashViewController()
   }
 }
-
-
