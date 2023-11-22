@@ -58,7 +58,7 @@ final class ImageListService {
     let request = builder.makeHTTPRequest(
       path: "/photos?page=\(page)&&per_page=\(perPage)",
       httpMethod: "GET",
-      baseURLString: Constants.DefaultBaseURL
+      baseURLString: Constants.defaultBaseURL
     )
     return request
   }
@@ -100,7 +100,7 @@ final class ImageListService {
   
   
   private func makeLikeRequest(_ token: String, photoId: String, method: String) -> URLRequest? {
-    let request = builder.makeHTTPRequest(path: "photos/\(photoId)/like", httpMethod: method, baseURLString: Constants.DefaultBaseURL)
+    let request = builder.makeHTTPRequest(path: "photos/\(photoId)/like", httpMethod: method, baseURLString: Constants.defaultBaseURL)
     return request
   }
   
@@ -127,7 +127,7 @@ final class ImageListService {
   }
 }
 
-struct Photo {
+public struct Photo {
   let id: String
   let size: CGSize
   let createdAt: Date?
@@ -146,6 +146,7 @@ struct PhotoResult: Codable {
   let width: Int?
   let height: Int?
   let urls: UrlsResult?
+  
   enum CodingKeys: String, CodingKey {
     case id = "id"
     case createdAt = "created_at"

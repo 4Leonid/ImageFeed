@@ -69,7 +69,7 @@ extension OAuth2Service {
       + "&&code=\(code)"
       + "&&grant_type=authorization_code",
       httpMethod: "POST",
-      baseURLString: Constants.baseURLString
+      baseURLString: "https://unsplash.com"//Constants.defaultBaseURL
     )
   }
 }

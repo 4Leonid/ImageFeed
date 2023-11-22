@@ -55,7 +55,7 @@ class SplashViewController: UIViewController {
 //  MARK: -  Private Methods
 extension SplashViewController {
   private func addView() {
-    view.backgroundColor = .ypBlack
+    view.backgroundColor = .ypNewBlack
     view.addSubview(splashImage)
   }
   
